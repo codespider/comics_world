@@ -1,10 +1,7 @@
 (ns comics-world.core
   (:require [ring.adapter.jetty :refer [run-jetty]]
-            [mount.core :refer [defstate]])
+            [mount.core :as mount :refer [defstate]])
   (:gen-class))
-
-
-
 
 (defn handler [request]
   {:status  200
@@ -19,7 +16,6 @@
   :stop (.stop app-server))
 
 (defn -main
-  "I don't do a whole lot ... yet."
   [& args]
   (println "Hello, World!")
-  (start-server 3000))
+  (mount/start))
