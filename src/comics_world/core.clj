@@ -5,20 +5,18 @@
   (:gen-class))
 
 (def db-config {:dbtype "postgresql"
-            :dbname     "postgres"
+            :dbname     "comics_world_dev"
             :host       "localhost"
             :user       "postgres"
             :password   ""})
 
-(defn get-time-from-db []
-  (first (jdbc/query db-config
-                     ["select now()"]
-                     {:row-fn :now})))
+(defn get-comic-books []
+  (jdbc/query db-config ["select id,title,lead_character,lang,publisher,pages,published_on,country from album"]))
 
 (defn handler [request]
   {:status  200
    :headers {"Content-Type" "text/html"}
-   :body    (str "Hello World!!! time now is " (get-time-from-db))})
+   :body    (str "Currently Published books are " (vec (get-comic-books)))})
 
 (defn start-server [port]
   (run-jetty handler {:port port :join? false}))
