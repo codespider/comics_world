@@ -1,5 +1,6 @@
 (ns comics-world.core
   (:require [ring.adapter.jetty :refer [run-jetty]]
+            [bidi.ring :refer [make-handler]]
             [mount.core :as mount :refer [defstate]]
             [clojure.java.jdbc :as jdbc])
   (:gen-class))
@@ -13,13 +14,16 @@
 (defn get-comic-books []
   (jdbc/query db-config ["select id,title,lead_character,lang,publisher,pages,published_on,country from album"]))
 
-(defn handler [request]
+(defn handler-1 [request]
   {:status  200
-   :headers {"Content-Type" "text/html"}
-   :body    (str "Currently Published books are " (vec (get-comic-books)))})
+   :headers {"Content-Type" "text/json"}
+   :body    (str (vec (get-comic-books)))})
+
+(def router
+  (make-handler ["/albums" handler-1]))
 
 (defn start-server [port]
-  (run-jetty handler {:port port :join? false}))
+  (run-jetty router {:port port :join? false}))
 
 (defstate app-server
   :start (start-server 3000)
