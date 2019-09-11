@@ -1,4 +1,4 @@
-# comics_world   [![Build Status](https://travis-ci.com/codespider/comics_world.svg?branch=master)](https://travis-ci.com/codespider/comics_world)
+# Comics World   [![Build Status](https://travis-ci.com/codespider/comics_world.svg?branch=master)](https://travis-ci.com/codespider/comics_world)
 
 A Platform Comic books.
 
