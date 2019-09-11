@@ -1,6 +1,6 @@
 # Comics World   [![Build Status](https://travis-ci.com/codespider/comics_world.svg?branch=master)](https://travis-ci.com/codespider/comics_world)
 
-A Platform Comic books.
+A Platform for Comic books.
 
 Comics World is a platform to buy, sell, discuss, discover, author comic books.
 ## Installation
