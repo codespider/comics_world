@@ -5,6 +5,7 @@
   :dependencies [[org.clojure/clojure "1.10.0"]
                  [ring/ring-core "1.7.1"]
                  [ring/ring-jetty-adapter "1.7.1"]
+                 [ring/ring-json "0.5.0"]
                  [bidi "2.1.6"]
                  [mount "0.1.16"]
                  [com.taoensso/timbre "4.10.0"]

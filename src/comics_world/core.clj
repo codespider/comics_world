@@ -1,5 +1,6 @@
 (ns comics-world.core
   (:require [ring.adapter.jetty :refer [run-jetty]]
+            [ring.util.response :refer [response header]]
             [bidi.ring :refer [make-handler]]
             [mount.core :as mount :refer [defstate]]
             [clojure.java.jdbc :as jdbc])
@@ -15,9 +16,8 @@
   (jdbc/query db-config ["select id,title,lead_character,lang,publisher,pages,published_on,country from album"]))
 
 (defn handler-1 [request]
-  {:status  200
-   :headers {"Content-Type" "text/json"}
-   :body    (str (vec (get-comic-books)))})
+  (-> (response (get-comic-books))
+      (header "Content-Type" "text/json")))
 
 (def router
   (make-handler ["/albums" handler-1]))
