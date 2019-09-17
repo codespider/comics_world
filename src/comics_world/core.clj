@@ -1,7 +1,8 @@
 (ns comics-world.core
   (:require [ring.adapter.jetty :refer [run-jetty]]
             [ring.util.response :refer [response header]]
-            [ring.middleware.json :refer [wrap-json-body]]
+            [comics-world.middlewares :refer [wrap-json]]
+            [ring.middleware.stacktrace :refer [wrap-stacktrace]]
             [camel-snake-kebab.core :as csk]
             [camel-snake-kebab.extras :as cske]
             [bidi.ring :refer [make-handler]]
@@ -32,7 +33,7 @@
 
 (def router
   (make-handler ["/" {"albums"        handler-1
-                      "albums_upload" (wrap-json-body handler-2 {:keywords? true})}]))
+                      "albums_upload" (wrap-stacktrace (wrap-json handler-2))}]))
 
 (defn start-server [port]
   (run-jetty router {:port port :join? false}))
