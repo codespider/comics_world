@@ -1,17 +1,19 @@
 (ns comics-world.core
   (:require [ring.adapter.jetty :refer [run-jetty]]
             [ring.util.response :refer [response header]]
+            [ring.middleware.json :refer [wrap-json-body]]
             [bidi.ring :refer [make-handler]]
             [mount.core :as mount :refer [defstate]]
             [clojure.java.jdbc :as jdbc]
-            [cheshire.core :as c])
+            [cheshire.core :as c]
+            [clojure.data.json :as json])
   (:gen-class))
 
-(def db-config {:dbtype "postgresql"
-            :dbname     "comics_world_dev"
-            :host       "localhost"
-            :user       "postgres"
-            :password   ""})
+(def db-config {:dbtype   "postgresql"
+                :dbname   "comics_world_dev"
+                :host     "localhost"
+                :user     "postgres"
+                :password ""})
 
 (defn get-comic-books []
   (jdbc/query db-config ["select id,title,lead_character,lang,publisher,pages,published_on,country from album"]))
@@ -19,11 +21,16 @@
 (defn handler-1 [request]
   (-> (get-comic-books)
       (c/generate-string)
-      (response )
+      (response)
       (header "Content-Type" "text/json")))
 
+(defn handler-2 [request]
+  (def req* request)
+  (response "blah"))
+
 (def router
-  (make-handler ["/albums" handler-1]))
+  (make-handler ["/" {"albums"        handler-1
+                      "albums_upload" (wrap-json-body handler-2 {:keywords? true})}]))
 
 (defn start-server [port]
   (run-jetty router {:port port :join? false}))
