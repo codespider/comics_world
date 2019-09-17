@@ -3,7 +3,8 @@
             [ring.util.response :refer [response header]]
             [bidi.ring :refer [make-handler]]
             [mount.core :as mount :refer [defstate]]
-            [clojure.java.jdbc :as jdbc])
+            [clojure.java.jdbc :as jdbc]
+            [cheshire.core :as c])
   (:gen-class))
 
 (def db-config {:dbtype "postgresql"
@@ -16,7 +17,9 @@
   (jdbc/query db-config ["select id,title,lead_character,lang,publisher,pages,published_on,country from album"]))
 
 (defn handler-1 [request]
-  (-> (response (get-comic-books))
+  (-> (get-comic-books)
+      (c/generate-string)
+      (response )
       (header "Content-Type" "text/json")))
 
 (def router
