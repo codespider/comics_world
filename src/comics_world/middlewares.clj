@@ -10,7 +10,6 @@
 (defn- camelise [m]
   (cske/transform-keys csk/->camelCase m))
 
-
 (defn wrap-dummy [handler]
   (fn [req]
     (println "called first")

@@ -9,8 +9,8 @@
 
 (def router
   (make-handler
-    ["/albums" {:get  (wrap-stacktrace (wrap-json-response albums))
-                :post (wrap-stacktrace (wrap-json-response (wrap-json-request post-album)))}]))
+   ["/albums" {:get  (wrap-stacktrace (wrap-json-response albums))
+               :post (wrap-stacktrace (wrap-json-response (wrap-json-request post-album)))}]))
 
 (defn start-server [port]
   (run-jetty router {:port port :join? false}))

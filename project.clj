@@ -18,6 +18,7 @@
                  [org.postgresql/postgresql "42.2.5"]
                  ; development time libraries
                  [ring/ring-devel "1.7.1"]]
+  :plugins [[lein-cljfmt "0.6.4"]]
   :main ^:skip-aot comics-world.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
