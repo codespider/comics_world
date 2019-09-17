@@ -1,17 +1,23 @@
 (ns comics-world.middlewares
   (:require [camel-snake-kebab.core :as csk]
             [camel-snake-kebab.extras :as cske]
-            [clojure.data.json :as json]))
+            [clojure.data.json :as json]
+            [cheshire.core :as c]))
 
+(defn- keywordize [m]
+  (cske/transform-keys csk/->kebab-case-keyword m))
 
-
-(defn wrap-json [handler]
+(defn wrap-json-request [handler]
   (fn [req]
-    (def middle* req)
-    ;(def body* (-> req :body slurp))
     (-> req
         (update :body slurp)
         (update :body json/read-str)
-        (update :body #(cske/transform-keys csk/->kebab-case-keyword %))
-        (update :headers #(cske/transform-keys csk/->kebab-case-keyword %))
+        (update :body keywordize)
+        (update :headers keywordize)
         handler)))
+
+(defn wrap-json-response [handler]
+  (fn [req]
+    (-> req
+        handler
+        (update :body c/generate-string))))
