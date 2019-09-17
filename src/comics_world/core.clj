@@ -1,7 +1,7 @@
 (ns comics-world.core
   (:require [ring.adapter.jetty :refer [run-jetty]]
             [ring.util.response :refer [response header]]
-            [comics-world.middlewares :refer [wrap-json-request wrap-json-response]]
+            [comics-world.middlewares :refer [wrap-json-request wrap-json-response wrap-dummy]]
             [ring.middleware.stacktrace :refer [wrap-stacktrace]]
             [bidi.ring :refer [make-handler]]
             [mount.core :as mount :refer [defstate]]
@@ -18,17 +18,20 @@
 (defn get-comic-books []
   (jdbc/query db-config ["select id,title,lead_character,lang,publisher,pages,published_on,country from album"]))
 
-(defn handler-1 [request]
+(defn albums [request]
+  (println "get called")
   (-> (get-comic-books)
       (response)
       (header "Content-Type" "text/json")))
 
-(defn handler-2 [request]
-  (response "blah"))
+(defn post_album [request]
+  (println "post called")
+  (response {:blah-hello "blah"
+             "hello-World-oNe" "world"}))
 
 (def router
-  (make-handler ["/" {"albums"        (wrap-stacktrace (wrap-json-response handler-1))
-                      "albums_upload" (wrap-stacktrace (wrap-json-request handler-2))}]))
+  (make-handler ["/" {"albums"        (wrap-stacktrace (wrap-json-response albums))
+                      "albums_upload" (wrap-stacktrace (wrap-json-response (wrap-json-request post_album)))}]))
 
 (defn start-server [port]
   (run-jetty router {:port port :join? false}))

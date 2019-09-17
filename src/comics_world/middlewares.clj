@@ -7,6 +7,17 @@
 (defn- keywordize [m]
   (cske/transform-keys csk/->kebab-case-keyword m))
 
+(defn- camelise [m]
+  (cske/transform-keys csk/->camelCase m))
+
+
+(defn wrap-dummy [handler]
+  (fn [req]
+    (println "called first")
+    (let [response (handler req)]
+      (println "called next")
+      response)))
+
 (defn wrap-json-request [handler]
   (fn [req]
     (-> req
@@ -20,4 +31,5 @@
   (fn [req]
     (-> req
         handler
+        (update :body camelise)
         (update :body c/generate-string))))
