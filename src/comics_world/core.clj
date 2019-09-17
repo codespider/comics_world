@@ -26,12 +26,13 @@
 
 (defn post_album [request]
   (println "post called")
-  (response {:blah-hello "blah"
+  (response {:blah-hello       "blah"
              "hello-World-oNe" "world"}))
 
 (def router
-  (make-handler ["/" {"albums"        (wrap-stacktrace (wrap-json-response albums))
-                      "albums_upload" (wrap-stacktrace (wrap-json-response (wrap-json-request post_album)))}]))
+  (make-handler
+    ["/albums" {:get  (wrap-stacktrace (wrap-json-response albums))
+                :post (wrap-stacktrace (wrap-json-response (wrap-json-request post_album)))}]))
 
 (defn start-server [port]
   (run-jetty router {:port port :join? false}))
